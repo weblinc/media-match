@@ -10,30 +10,18 @@ Why?
 * **Speed**: In many browsers, ops/sec rival or exceed native matchMedia. See 'test' to run your own speed tests using JSLitmus
 * **Size**: 3kb minified
 
-Media type support
+Media type and feature support
 ---
-* **all**
-* **screen**
-* **print**
-* **speech**
-* **projection**
-* **handheld**
-* **tv**
-* **braille**
-* **embossed**
-* **tty**
-
-Media feature support
----
+* **type**:                 `all`, `screen`, `print`, `speech`, `projection`, `handheld`, `tv`, `braille`, `embossed`, `tty`
 * **width**:                `width`, `min-width`, `max-width`
-* **height**:                `height`, `min-height`, `max-height`
+* **height**:               `height`, `min-height`, `max-height`
 * **device-width**:         `device-width`, `min-device-width`, `max-device-width`
 * **device-height**:        `device-height`, `min-device-height`, `max-device-height`
 * **aspect-ratio**:         `aspect-ratio`, `min-aspect-ratio`, `max-aspect-ratio`
 * **device-aspect-ratio**:  `device-aspect-ratio`, `min-device-aspect-ratio`, `max-device-aspect-ratio`
+* **orientation**:          `orientation`
 
 ###Unverified support
-* **orientation**:          `orientation`
 * **color**:                `color`, `min-color`, `max-color`
 * **color-index**:          `color-index`, `min-color-index`, `max-color-index`
 * **monochrome**:           `monochrome`, `min-monochrome`, `max-monochrome`
@@ -47,10 +35,24 @@ Example
 ---
 ```
 <script type="text/javascript">
+    var mql = Media.match('screen and (color) and (orientation: landscape) and (min-width: 600px) and (min-height: 400px)');
+    //console.log(mql);
+    /*
+        mql has the following properties:
+        matches         : <Boolean>
+        media           : <String>
+        addListener     : <Function>
+        removeListener  : <Function>
+    */
+    
     Media
         .match('screen and (min-width: 600px) and (min-height: 400px), screen and (min-height: 400px)')
         .addListener(function(mql) {
-            // Your code here..
+            if (mql.matches) {
+                // Media query does match
+            } else {
+                // Media query does not match anymore
+            }
         });
 </script>
 ```
