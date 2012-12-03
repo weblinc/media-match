@@ -1,0 +1,21 @@
+/* Used with Media - Testing css media queries in Javascript. Authors & copyright (c) 2012: WebLinc, David Knight, Zac Owen. */
+/* NOTE: This file is used to determine media query support and get media type. Include this with your base style sheet or link to this external file. */
+/*
+    z-index : Access Media _typeList array as index.
+    width   : Used to retrieve dpi for non-IE broswers. IE supports screen.DPIX.
+    height  : Used to test media query support. IE <9 handle media type but not query expression.
+*/
+head                { position: relative; z-index: 0; width: 1in; height: 0px; }
+@media screen       { head { z-index: 1; } }
+@media print        { head { z-index: 2; } }
+@media speech       { head { z-index: 3; } }
+@media projection   { head { z-index: 4; } }
+@media handheld     { head { z-index: 5; } }
+@media tv           { head { z-index: 6; } }
+@media braille      { head { z-index: 7; } }
+@media embossed     { head { z-index: 8; } }
+@media tty          { head { z-index: 9; } }
+/*
+    Test media query support.
+*/
+@media screen and (height) { head { height: 1px; } }
