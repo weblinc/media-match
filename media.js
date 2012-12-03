@@ -238,6 +238,7 @@
             Media.features.width            = win.innerWidth || _viewport.clientWidth;
             Media.features.height           = win.innerHeight || _viewport.clientHeight;
             Media.features['aspect-ratio']  = (Media.features.width / Media.features.height).toFixed(2);
+            Media.features.orientatiton     = Media.features.height >= Media.features.width ? 'portrait' : 'landscape';
         },
 
         listen: function(listener) {
