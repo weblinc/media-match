@@ -42,11 +42,11 @@
                 var absValue = Media.getAbsValue(this.value);
 
                 if (this.type === 'min') {
-                    return feature > absValue;
+                    return feature >= absValue;
                 }
 
                 if (this.type === 'max') {
-                    return feature < absValue;
+                    return feature <= absValue;
                 }
 
                 if (this.value !== 'undefined') {
@@ -134,22 +134,30 @@
                 if (match[2] == 'em') {
                     // Assumed base font size is 16px
                     return 16 * match[1];
-                } else if (match[2] == 'pt') {
+                }
+
+                if (match[2] == 'pt') {
                     return (Media.features.resolution / 72) * match[1];
                 }
+
                 return parseFloat(match[1]);
             }
 
             // Convert aspect ratio to decimals
-            else if ((match = data.match(/(\d+)[\/:](\d+)/))) {
+            if ((match = data.match(/(\d+)[\/:](\d+)/))) {
                 return match[1] / match[2];
             }
 
             // Convert resolution unit to pixels
-            else if ((match = data.match(/([\d]+)(dpi|dpcm)/))) {
+            if ((match = data.match(/([\d]+)(dpi|dppx|dpcm)/))) {
                 if (match[2] == 'dpcm') {
                     return match[1] * 0.3937;
                 }
+
+                if (match[2] == 'dppx') {
+                    return match[1] * 96;
+                }
+
                 return match[1];
             }
 
@@ -238,7 +246,7 @@
             Media.features.width            = win.innerWidth || _viewport.clientWidth;
             Media.features.height           = win.innerHeight || _viewport.clientHeight;
             Media.features['aspect-ratio']  = (Media.features.width / Media.features.height).toFixed(2);
-            Media.features.orientatiton     = Media.features.height >= Media.features.width ? 'portrait' : 'landscape';
+            Media.features.orientation      = Media.features.height >= Media.features.width ? 'portrait' : 'landscape';
         },
 
         listen: function(listener) {
