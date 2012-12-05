@@ -6,7 +6,7 @@
 
     var _doc             = win.document,
         _mediaInfo       = _doc.getElementsByTagName('head')[0],
-        _mediaInfoStyle  = '',
+        _mediaInfoStyle = (win.getComputedStyle && win.getComputedStyle(_mediaInfo, null)) || _mediaInfo.currentStyle,
         _viewport        = _doc.documentElement,
         _typeList        = 'all, screen, print, speech, projection, handheld, tv, braille, embossed, tty',
         _mqlID           = 0,
@@ -90,22 +90,10 @@
         };
     };
 
-    /*
-        getStyle
-        Gets computed/current style of the target element.
-    */
-    function getStyle(target, property, psuedo) {
-        return win.getComputedStyle ? 
-            win.getComputedStyle(target, psuedo || null).getPropertyValue(property) : 
-            target.currentStyle[property.replace(/-([a-z])/g, function (p, p1) {
-                return p1.toUpperCase();
-            })];
-    };
-
     win.Media = {
         // Properties
-        supported   : parseFloat(getStyle(_mediaInfo, 'height')) === 1,
-        type        : _typeList.split(', ')[parseFloat(getStyle(_mediaInfo, 'z-index'))],
+        supported   : parseFloat(_mediaInfoStyle.height) === 1,
+        type        : _typeList.split(', ')[parseFloat(_mediaInfoStyle.zIndex)],
         queries     : [],
         features    : {
             "width"                 : 0, /* Update on resize */
@@ -117,8 +105,8 @@
             "device-width"          : screen.width,
             "device-height"         : screen.height,
             "monochrome"            : Number(screen.colorDepth == 2),
-            "orientation"           : "landscape", /* Update on orientation change */
-            "resolution"            : screen.deviceXDPI || parseFloat(getStyle(_mediaInfo, 'width'))
+            "orientation"           : "landscape", /* Update on resize/orientation change */
+            "resolution"            : screen.deviceXDPI || parseFloat(_mediaInfoStyle.width)
         },
 
         // Methods
