@@ -128,7 +128,7 @@
                     return (Media.features.resolution / 72) * match[1];
                 }
 
-                return parseFloat(match[1]);
+                return match[1];
             }
 
             // Convert aspect ratio to decimals
