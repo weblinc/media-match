@@ -1,7 +1,7 @@
 Media.match
 ===========
 
-Testing css media queries in Javascript. Not a polyfill and perhaps faster than native window.matchMedia.
+Testing css media queries in javascript faster than native window.matchMedia, perhaps.
 
 Why?
 ---
