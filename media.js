@@ -4,13 +4,13 @@
 (function(win) {
     'use strict';
 
-    var _doc             = win.document,
-        _mediaInfo       = _doc.getElementsByTagName('head')[0],
+    var _doc            = win.document,
+        _mediaInfo      = _doc.getElementsByTagName('head')[0],
         _mediaInfoStyle = (win.getComputedStyle && win.getComputedStyle(_mediaInfo, null)) || _mediaInfo.currentStyle,
-        _viewport        = _doc.documentElement,
-        _typeList        = 'all, screen, print, speech, projection, handheld, tv, braille, embossed, tty',
-        _mqlID           = 0,
-        _timer           = 0;
+        _viewport       = _doc.documentElement,
+        _typeList       = 'all, screen, print, speech, projection, handheld, tv, braille, embossed, tty',
+        _mqlID          = 0,
+        _timer          = 0;
 
     // Helper methods
 
@@ -96,16 +96,16 @@
         type        : _typeList.split(', ')[parseFloat(_mediaInfoStyle.zIndex)],
         queries     : [],
         features    : {
-            "width"                 : 0, /* Update on resize */
-            "height"                : 0, /* Update on resize */
-            "aspect-ratio"          : 0, /* Update on resize */
+            "width"                 : 0, // Update on resize
+            "height"                : 0, // Update on resize
+            "aspect-ratio"          : 0, // Update on resize
             "color"                 : screen.colorDepth,
             "color-index"           : Math.pow(2, screen.colorDepth),
             "device-aspect-ratio"   : (screen.width / screen.height).toFixed(2),
             "device-width"          : screen.width,
             "device-height"         : screen.height,
             "monochrome"            : Number(screen.colorDepth == 2),
-            "orientation"           : "landscape", /* Update on resize/orientation change */
+            "orientation"           : "landscape", // Update on resize/orientation change
             "resolution"            : screen.deviceXDPI || parseFloat(_mediaInfoStyle.width)
         },
 
@@ -157,8 +157,8 @@
          */
         parseMatch: function(media, matched) {
             var list    = typeof media === 'string' ? media.split(', ') : media,
-                negate  = list[list.length - 1].indexOf('not ') !== -1,
                 mq      = list.pop(),
+                negate  = mq.indexOf('not ') !== -1,
                 mt      = 'all',
                 expr    = mq.split(' and '),
                 exprl   = expr.length - 1,
