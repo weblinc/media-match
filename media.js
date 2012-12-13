@@ -10,6 +10,7 @@
         _viewport       = _doc.documentElement,
         _typeList       = 'all, screen, print, speech, projection, handheld, tv, braille, embossed, tty',
         _mediaExpr      = /\(\s*(min|max)?-?([^:\s]+)\s*:\s*([^\s]+)\s*\)/,
+        _typeExpr       = /(not)?\s*(\w*)/,
         _mqlID          = 0,
         _timer          = 0;
 
@@ -45,10 +46,10 @@
 
         _mqlID++;
 
-        Media.queries[id] = {
+        Media.queries.push({
             mql: mql,
             listeners: null
-        };
+        });
 
         return mql;
     };
@@ -57,7 +58,7 @@
         // Properties
         supported   : false,
         type        : 'all',
-        queries     : {},
+        queries     : [],
         features    : {
             "width"                 : 0, // Update on resize
             "height"                : 0, // Update on resize
@@ -88,7 +89,7 @@
                 }
 
                 if (match[2] == 'pt') {
-                    return (Media.features.resolution / 72) * match[1];
+                    return (this.features.resolution / 72) * match[1];
                 }
 
                 return match[1];
@@ -144,13 +145,13 @@
                         } else if (item[3] !== 'undefined') {
                             itemMatch = feature === absValue;
                         } else {
-                            itemMatch = Number(feature);
+                            itemMatch = feature;
                         }
                     } else {
-                        mt = expr[exprl].match(/(not)?\s*(\w*)/)[2] || mt;
+                        mt = expr[exprl].match(_typeExpr)[2] || mt;
                     }
                     
-                    if ((item && !itemMatch) || (!mt === Media.type && mt !== 'all')) {
+                    if ((item && !itemMatch) || (!mt === this.type && mt !== 'all')) {
                         return (list.length ? this.parseMatch(list, matched) : negate);
                     }
                 }
