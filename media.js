@@ -9,92 +9,55 @@
         _mediaInfoStyle = (win.getComputedStyle && win.getComputedStyle(_mediaInfo, null)) || _mediaInfo.currentStyle,
         _viewport       = _doc.documentElement,
         _typeList       = 'all, screen, print, speech, projection, handheld, tv, braille, embossed, tty',
+        _mediaExpr      = /\(\s*(min|max)?-?([^:\s]+)\s*:\s*([^\s]+)\s*\)/,
         _mqlID          = 0,
         _timer          = 0;
 
     // Helper methods
 
     /*
-        MediaType
-        A single instance of a media type, ex. not screen or screen
-    */
-    function MediaType(name) {
-        return {
-            name    : name || 'all', // screen, print, ...
-            test    : function() {
-                return this.name === Media.type;
-            }
-        };
-    };
-
-    /*
-        MediaExpr
-        A single instance of a media expression, ex. (max-width: 400px)
-    */
-    function MediaExpr(name, value, type) {
-        var feature = Media.features[name];
-
-        return {
-            name    : name,
-            value   : value,
-            type    : type,
-            test    : function() {
-                var absValue = Media.getAbsValue(this.value);
-
-                if (this.type === 'min') {
-                    return feature >= absValue;
-                }
-
-                if (this.type === 'max') {
-                    return feature <= absValue;
-                }
-
-                if (this.value !== 'undefined') {
-                    return feature === absValue;
-                }
-
-                return Number(feature);
-            }
-        };
-    };
-
-    /*
         MediaQueryList
         A list of parsed media queries, ex. screen and (max-width: 400px), screen and (max-width: 800px)
     */
     function MediaQueryList(media) {
-        var _id = _mqlID;
+        var id = _mqlID,
+            mql = {
+                matches         : Media.parseMatch(media, false),
+                media           : media,
+                addListener     : function addListener(listener) {
+                    Media.queries[id].listeners || (Media.queries[id].listeners = []);
+                    listener && Media.queries[id].listeners.push(listener);
+                },
+                removeListener  : function removeListener(listener) {
+                    var query = Media.queries[id];
+
+                    if (!query) {
+                        return;
+                    }
+
+                    for (var i = 0, il = query.listeners.length; i < il; i++) {
+                        if (query.listeners[i] === listener) {
+                            query.listeners.splice(i, 1);
+                        }
+                    }
+                }
+            };
 
         _mqlID++;
 
-        return {
-            matches         : Media.parseMatch(media, false),
-            media           : media,
-            addListener     : function addListener(listener) {
-                Media.queries[_id] || (Media.queries[_id] = {mql: this, listeners: []});
-                Media.queries[_id].listeners.push(listener);
-            },
-            removeListener  : function removeListener(listener) {
-                var query = Media.queries[_id];
-
-                if (!query) {
-                    return;
-                }
-
-                for (var i = 0, il = query.listeners.length; i < il; i++) {
-                    if (query.listeners[i] === listener) {
-                        query.listeners.splice(i, 1);
-                    }
-                }
-            }
+        Media.queries[id] = {
+            mql: mql,
+            listeners: null
         };
+
+        return mql;
     };
 
     win.Media = {
         // Properties
-        supported   : parseFloat(_mediaInfoStyle.height) === 1,
-        type        : _typeList.split(', ')[parseFloat(_mediaInfoStyle.zIndex)],
-        queries     : [],
+        supported   : false,
+        type        : 'all',
+        queries     : {},
         features    : {
             "width"                 : 0, // Update on resize
             "height"                : 0, // Update on resize
@@ -106,7 +69,7 @@
             "device-height"         : screen.height,
             "monochrome"            : Number(screen.colorDepth == 2),
             "orientation"           : "landscape", // Update on resize/orientation change
-            "resolution"            : screen.deviceXDPI || parseFloat(_mediaInfoStyle.width)
+            "resolution"            : 96
         },
 
         // Methods
@@ -165,22 +128,31 @@
                 match   = !negate;
 
             do {
-                var item = null;
+                var item = null, itemMatch = null;
 
                 // Test for 'not screen' and (max-width: 400px).
                 // Evaluate each item, then call parseMatch() if there are more media queries or return value of negate.
-                if (expr[exprl].indexOf('(') === -1) {
-                    mt = MediaType(expr[exprl].match(/(not)?\s*(\w*)/)[2]);
+                if (expr[exprl].indexOf('(') === -1 || (item = expr[exprl].match(_mediaExpr))) {
+                    if (item) {
+                        var feature     = this.features[item[2]],
+                            absValue    = this.getAbsValue(item[3]);
 
-                    if (!mt.test()) {
-                        return (list.length ? this.parseMatch(list, matched) : negate);
+                        if (item[1] === 'min') {
+                            itemMatch = feature >= absValue;
+                        } else if (item[1] === 'max') {
+                            itemMatch = feature <= absValue;
+                        } else if (item[3] !== 'undefined') {
+                            itemMatch = feature === absValue;
+                        } else {
+                            itemMatch = Number(feature);
+                        }
                     } else {
-                        continue;
+                        mt = expr[exprl].match(/(not)?\s*(\w*)/)[2] || mt;
                     }
-                }
-
-                if ((item = expr[exprl].match(/\(\s*(min|max)?-?([^:\s]+)\s*:\s*([^\s]+)\s*\)/)) && (!MediaExpr(item[2], item[3], item[1]).test())) {
-                    return (list.length ? this.parseMatch(list, matched) : negate);
+                    
+                    if ((item && !itemMatch) || (!mt === Media.type && mt !== 'all')) {
+                        return (list.length ? this.parseMatch(list, matched) : negate);
+                    }
                 }
             } while(exprl--);
 
@@ -190,9 +162,7 @@
         /*
             match
          */
-        match: function(media) {
-            return new MediaQueryList(media);
-        },
+        match: MediaQueryList,
 
         /*
             watch
@@ -216,13 +186,14 @@
                     if ((match && !query.mql.matches) || (!match && query.mql.matches)) {
                         query.mql.matches = match;
 
-                        for (var i = 0, il = query.listeners.length; i < il; i++) {
-                            if (query.listeners[i]) {
-                                query.listeners[i].call(win, query.mql, evt);
+                        if (query.listeners) {
+                            for (var i = 0, il = query.listeners.length; i < il; i++) {
+                                if (query.listeners[i]) {
+                                    query.listeners[i].call(win, query.mql, evt);
+                                }
                             }
                         }
                     }
-
                 } while(id--);
             }, 10);
         },
@@ -231,10 +202,10 @@
             Sets properties of Media that change on resize and/or orientation.
         */
         setMutableFeatures: function() {
-            Media.features.width            = win.innerWidth || _viewport.clientWidth;
-            Media.features.height           = win.innerHeight || _viewport.clientHeight;
-            Media.features['aspect-ratio']  = (Media.features.width / Media.features.height).toFixed(2);
-            Media.features.orientation      = Media.features.height >= Media.features.width ? 'portrait' : 'landscape';
+            this.features.width            = win.innerWidth || _viewport.clientWidth;
+            this.features.height           = win.innerHeight || _viewport.clientHeight;
+            this.features['aspect-ratio']  = (this.features.width / this.features.height).toFixed(2);
+            this.features.orientation      = this.features.height >= this.features.width ? 'portrait' : 'landscape';
         },
 
         listen: function(listener) {
@@ -245,9 +216,18 @@
                 win.attachEvent('onresize', listener);
                 win.attachEvent('onorientationchange', listener);
             }
+        },
+
+        init: function() {
+            this.supported = parseFloat(_mediaInfoStyle.height) === 1;
+            this.type      = _typeList.split(', ')[parseFloat(_mediaInfoStyle.zIndex)];
+
+            this.features.resolution = screen.deviceXDPI || parseFloat(_mediaInfoStyle.width);
+
+            this.setMutableFeatures();
+            this.listen(this.watch);
         }
     };
 
-    Media.setMutableFeatures();
-    Media.listen(Media.watch);
+    Media.init();
 })(window);
