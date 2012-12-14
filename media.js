@@ -6,7 +6,7 @@
 
     var _doc            = win.document,
         _mediaInfo      = _doc.getElementsByTagName('head')[0],
-        _mediaInfoStyle = (win.getComputedStyle && win.getComputedStyle(_mediaInfo, null)) || _mediaInfo.currentStyle,
+        _mediaInfoStyle = ('getComputedStyle' in win && win.getComputedStyle(_mediaInfo, null)) || _mediaInfo.currentStyle,
         _viewport       = _doc.documentElement,
         _typeList       = 'all, screen, print, speech, projection, handheld, tv, braille, embossed, tty',
         _mediaExpr      = /\(\s*(min|max)?-?([^:\s]+)\s*:\s*([^\s]+)\s*\)/,
