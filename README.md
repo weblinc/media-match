@@ -7,7 +7,7 @@ Why?
 ---
 * **Browser support**: Tested in IE 6-9, Chrome, Firefox, Opera and Safari
 * **Feature support**: Has all the basics + most of the spec http://www.w3.org/TR/css3-mediaqueries/
-* **Speed**: In many browsers, ops/sec rival or exceed native matchMedia. See 'test' to run your own speed tests using JSLitmus or check out http://jsperf.com/matchmedia/11
+* **Speed**: In many browsers, ops/sec rival or exceed native matchMedia. See 'test' to run your own speed tests using JSLitmus or check out http://jsperf.com/matchmedia/11 and http://jsfiddle.net/wV9HZ/2/
 * **Size**: 3kb minified
 
 Media type and feature support
