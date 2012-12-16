@@ -244,5 +244,5 @@
         }
     };
 
-    Media.init();console.log('run');
+    Media.init();
 })(window);
