@@ -8,8 +8,8 @@
         _mediaInfo      = _doc.getElementsByTagName('head')[0],
         _mediaInfoStyle = (win.getComputedStyle && win.getComputedStyle(_mediaInfo, null)) || _mediaInfo.currentStyle,
         _viewport       = _doc.documentElement,
-        _typeList       = 'all, screen, print, speech, projection, handheld, tv, braille, embossed, tty',
-        _mediaExpr      = /\(\s*(min|max)?-?([^:\s]+)\s*:\s*([^\s]+)\s*\)/,
+        _typeList       = 'screen, print, speech, projection, handheld, tv, braille, embossed, tty',
+        _mediaExpr      = /\(\s*(not)?\s*(min|max)?-?([^:\s]+)\s*:\s*([^\s]+)\s*\)/,
         _typeExpr       = /(not)?\s*(\w*)/,
         _mqlID          = 0,
         _timer          = 0;
@@ -120,44 +120,58 @@
             parseMatch
          */
         parseMatch: function(media, matched) {
-            var list    = typeof media === 'string' ? media.split(', ') : media,
-                mq      = list.pop(),
-                negate  = mq.indexOf('not ') !== -1,
-                mt      = 'all',
-                expr    = mq.split(' and '),
-                exprl   = expr.length - 1,
-                match   = !negate;
+            var mql         = typeof media === 'string' ? media.split(', ') : media,
+                mq          = mql.pop(),
+                mt          = 'all',
+                exprList    = mq.split(' and '),
+                exprl       = exprList.length - 1,
+                match       = true;
 
             do {
-                var item = null, itemMatch = null;
+                var expr        = null,
+                    exprMatch   = true,
+                    type        = null,
+                    typeMatch   = true,
+                    negate      = false;
 
                 // Test for 'not screen' and (max-width: 400px).
-                // Evaluate each item, then call parseMatch() if there are more media queries or return value of negate.
-                if (expr[exprl].indexOf('(') === -1 || (item = expr[exprl].match(_mediaExpr))) {
-                    if (item) {
-                        var feature     = this.features[item[2]],
-                            absValue    = this.getAbsValue(item[3]);
+                // Evaluate each expr, then call parseMatch() if there are more media queries or return value of negate.
+                if (exprList[exprl].indexOf('(') === -1 || (expr = exprList[exprl].match(_mediaExpr))) {
 
-                        if (item[1] === 'min') {
-                            itemMatch = feature >= absValue;
-                        } else if (item[1] === 'max') {
-                            itemMatch = feature <= absValue;
-                        } else if (item[3] !== 'undefined') {
-                            itemMatch = feature === absValue;
+                    if (expr) {
+                        var feature     = this.features[expr[3]],
+                            absValue    = this.getAbsValue(expr[4]);
+
+                        negate = expr[1] === 'not';
+
+                        if (expr[2] === 'min') {
+                            exprMatch = feature >= absValue;
+                        } else if (expr[2] === 'max') {
+                            exprMatch = feature <= absValue;
+                        } else if (expr[4] !== 'undefined') {
+                            exprMatch = feature === absValue;
                         } else {
-                            itemMatch = feature;
+                            exprMatch = feature;
                         }
                     } else {
-                        mt = expr[exprl].match(_typeExpr)[2] || mt;
+                        type        = exprList[exprl].match(_typeExpr) || ['', ''];
+                        negate      = type[1] === 'not';
+                        mt          = type[2] || mt;
+                        typeMatch   = mt === this.type || mt === 'all';
+
+                        matched && negate && (mt = _typeList.split(mt).join(', ').replace(/(,\s){2}/, ''));
                     }
-                    
-                    if ((item && !itemMatch) || (!mt === this.type && mt !== 'all')) {
-                        return (list.length ? this.parseMatch(list, matched) : negate);
+
+                    if (
+                        (expr && ((negate && exprMatch) || (!negate && !exprMatch))) || 
+                        (!expr && ((negate && typeMatch) || (!negate && !typeMatch)))
+                    ) {
+                        return (mql.length ? this.parseMatch(mql, matched) : false);
                     }
                 }
             } while(exprl--);
 
-            return (matched && match && {matches: match, type: (negate ? _typeList.split(mt).join(', ').replace(/(,\s){2}/, '') : mt), media: mq}) || match;
+            return (matched && match && {matches: match, type: mt, media: mq}) || match;
         },
 
         /*
@@ -221,7 +235,7 @@
 
         init: function() {
             this.supported = parseFloat(_mediaInfoStyle.height) === 1;
-            this.type      = _typeList.split(', ')[parseFloat(_mediaInfoStyle.zIndex)];
+            this.type      = _typeList.split(', ')[parseFloat(_mediaInfoStyle.zIndex) - 1] || 'all'; 
 
             this.features.resolution = screen.deviceXDPI || parseFloat(_mediaInfoStyle.width);
 
@@ -230,5 +244,5 @@
         }
     };
 
-    Media.init();
+    Media.init();console.log('run');
 })(window);
