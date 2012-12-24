@@ -65,7 +65,7 @@
             "aspect-ratio"          : 0, // Update on resize
             "color"                 : screen.colorDepth,
             "color-index"           : Math.pow(2, screen.colorDepth),
-            "device-aspect-ratio"   : (screen.width / screen.height).toFixed(2),
+            "device-aspect-ratio"   : (screen.height / screen.width).toFixed(2),
             "device-width"          : screen.width,
             "device-height"         : screen.height,
             "monochrome"            : Number(screen.colorDepth == 2),
@@ -92,7 +92,7 @@
                     return (this.features.resolution / 72) * match[1];
                 }
 
-                return match[1];
+                return match[1] * 1;
             }
 
             // Convert aspect ratio to decimals
@@ -110,7 +110,7 @@
                     return match[1] * 96;
                 }
 
-                return match[1];
+                return match[1] * 1;
             }
 
             return data;
@@ -217,10 +217,13 @@
             Sets properties of Media that change on resize and/or orientation.
         */
         setMutableFeatures: function() {
-            this.features.width            = win.innerWidth || _viewport.clientWidth;
-            this.features.height           = win.innerHeight || _viewport.clientHeight;
-            this.features['aspect-ratio']  = (this.features.width / this.features.height).toFixed(2);
-            this.features.orientation      = this.features.height >= this.features.width ? 'portrait' : 'landscape';
+            var w = win.innerWidth || _viewport.clientWidth,
+                h = win.innerHeight || _viewport.clientHeight;
+
+            this.features.width            = w;
+            this.features.height           = h;
+            this.features['aspect-ratio']  = (h >= w ? h / w : w / h).toFixed(2);
+            this.features.orientation      = (h >= w ? 'portrait' : 'landscape');
         },
 
         listen: function(listener) {
@@ -234,10 +237,12 @@
         },
 
         init: function() {
-            this.supported = parseFloat(_mediaInfoStyle.height) === 1;
-            this.type      = _typeList.split(', ')[parseFloat(_mediaInfoStyle.zIndex) - 1] || 'all'; 
+            var ratio       = win.devicePixelRatio;
 
-            this.features.resolution = screen.deviceXDPI || parseFloat(_mediaInfoStyle.width);
+            this.supported  = parseFloat(_mediaInfoStyle.height) === 1;
+            this.type       = _typeList.split(', ')[parseFloat(_mediaInfoStyle.zIndex) - 1] || 'all'; 
+
+            this.features.resolution = (ratio && ratio * 96) || screen.deviceXDPI || parseFloat(_mediaInfoStyle.width);
 
             this.setMutableFeatures();
             this.listen(this.watch);
