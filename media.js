@@ -65,7 +65,7 @@
             "aspect-ratio"          : 0, // Update on resize
             "color"                 : screen.colorDepth,
             "color-index"           : Math.pow(2, screen.colorDepth),
-            "device-aspect-ratio"   : (screen.height / screen.width).toFixed(2),
+            "device-aspect-ratio"   : 0,
             "device-width"          : screen.width,
             "device-height"         : screen.height,
             "monochrome"            : Number(screen.colorDepth == 2),
@@ -237,11 +237,14 @@
         },
 
         init: function() {
-            var ratio       = win.devicePixelRatio;
+            var w           = screen.width,
+                h           = screen.height,
+                ratio       = win.devicePixelRatio;
 
             this.supported  = parseFloat(_mediaInfoStyle.height) === 1;
             this.type       = _typeList.split(', ')[parseFloat(_mediaInfoStyle.zIndex) - 1] || 'all'; 
 
+            this.features["device-aspect-ratio"] = (h >= w ? h / w : w / h).toFixed(2);
             this.features.resolution = (ratio && ratio * 96) || screen.deviceXDPI || parseFloat(_mediaInfoStyle.width);
 
             this.setMutableFeatures();
