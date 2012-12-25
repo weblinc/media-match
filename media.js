@@ -73,8 +73,7 @@
             "device-width"          : _deviceWidth,
             "device-height"         : _deviceHeight,
             "orientation"           : "landscape", // Update on resize/orientation change
-            "resolution"            : 96,
-            "touch-enabled"         : Number(('ontouchstart' in win) || win.DocumentTouch && _doc instanceof DocumentTouch) // Modernizr.touch
+            "resolution"            : 96
         },
 
         // Methods
