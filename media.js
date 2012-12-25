@@ -4,6 +4,7 @@
 (function(win) {
     'use strict';
 
+    // Internal globals
     var _doc            = win.document,
         _mediaInfo      = _doc.getElementsByTagName('head')[0],
         _mediaInfoStyle = (win.getComputedStyle && win.getComputedStyle(_mediaInfo, null)) || _mediaInfo.currentStyle,
@@ -125,17 +126,17 @@
         parseMatch: function(media, matched) {
             var mql         = typeof media === 'string' ? media.split(', ') : media,
                 mq          = mql.pop(),
+                negate      = mq.indexOf('not ') !== -1,
                 mt          = 'all',
                 exprList    = mq.split(' and '),
                 exprl       = exprList.length - 1,
-                match       = true;
+                match       = !negate;
 
             do {
                 var expr        = null,
                     exprMatch   = true,
                     type        = null,
-                    typeMatch   = true,
-                    negate      = false;
+                    typeMatch   = true;
 
                 // Test for 'not screen' and (max-width: 400px).
                 // Evaluate each expr, then call parseMatch() if there are more media queries or return value of negate.
@@ -144,8 +145,6 @@
                     if (expr) {
                         var feature     = this.features[expr[3]],
                             absValue    = this.getAbsValue(expr[4]);
-
-                        negate = expr[1] === 'not';
 
                         if (expr[2] === 'min') {
                             exprMatch = feature >= absValue;
@@ -157,19 +156,19 @@
                             exprMatch = feature;
                         }
                     } else {
-                        type        = exprList[exprl].match(_typeExpr) || ['', ''];
-                        negate      = type[1] === 'not';
-                        mt          = type[2] || mt;
+                        type        = exprList[exprl].match(_typeExpr) || ['', 'all'];
+                        mt          = type[2];
                         typeMatch   = mt === this.type || mt === 'all';
 
-                        matched && negate && (mt = _typeList.split(mt).join(', ').replace(/(,\s){2}/, ''));
+                        matched && negate && mt !== 'all' && (mt = _typeList.split(mt).join(', ').replace(/(,\s){2}/, ''));
                     }
 
                     if (
-                        (expr && ((negate && exprMatch) || (!negate && !exprMatch))) || 
-                        (!expr && ((negate && typeMatch) || (!negate && !typeMatch)))
+                        //(expr && ((negate && exprMatch) || (!negate && !exprMatch))) || 
+                        //(!expr && ((negate && typeMatch) || (!negate && !typeMatch)))
+                        ((expr && !exprMatch) || (!expr && !typeMatch))
                     ) {
-                        return (mql.length ? this.parseMatch(mql, matched) : false);
+                        return (mql.length ? this.parseMatch(mql, matched) : negate);
                     }
                 }
             } while(exprl--);
