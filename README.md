@@ -21,13 +21,11 @@ Media type and feature support
 * **device-aspect-ratio**:  `device-aspect-ratio`, `min-device-aspect-ratio`, `max-device-aspect-ratio`
 * **orientation**:          `orientation`
 * **resolution**:           `resolution`, `min-resolution`, `max-resolution`
-
-###Unverified support
 * **color**:                `color`, `min-color`, `max-color`
 * **color-index**:          `color-index`, `min-color-index`, `max-color-index`
-* **monochrome**:           `monochrome`, `min-monochrome`, `max-monochrome`
 
 ###Lacks support
+* **monochrome**:           `monochrome`, `min-monochrome`, `max-monochrome`
 * **scan**: `scan`
 * **grid**: `grid`
 
