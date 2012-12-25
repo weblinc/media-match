@@ -7,6 +7,9 @@
     var _doc            = win.document,
         _mediaInfo      = _doc.getElementsByTagName('head')[0],
         _mediaInfoStyle = (win.getComputedStyle && win.getComputedStyle(_mediaInfo, null)) || _mediaInfo.currentStyle,
+        _deviceWidth    = screen.width,
+        _deviceHeight   = screen.height,
+        _color          = screen.colorDepth,
         _viewport       = _doc.documentElement,
         _typeList       = 'screen, print, speech, projection, handheld, tv, braille, embossed, tty',
         _mediaExpr      = /\(\s*(not)?\s*(min|max)?-?([^:\s]+)\s*:\s*([^\s]+)\s*\)/,
@@ -63,14 +66,14 @@
             "width"                 : 0, // Update on resize
             "height"                : 0, // Update on resize
             "aspect-ratio"          : 0, // Update on resize
-            "color"                 : screen.colorDepth,
-            "color-index"           : Math.pow(2, screen.colorDepth),
-            "device-aspect-ratio"   : 0,
-            "device-width"          : screen.width,
-            "device-height"         : screen.height,
-            "monochrome"            : Number(screen.colorDepth == 2),
+            "color"                 : _color,
+            "color-index"           : Math.pow(2, _color),
+            "device-aspect-ratio"   : (_deviceHeight / _deviceWidth).toFixed(2),
+            "device-width"          : _deviceWidth,
+            "device-height"         : _deviceHeight,
             "orientation"           : "landscape", // Update on resize/orientation change
-            "resolution"            : 96
+            "resolution"            : 96,
+            "touch-enabled"         : Number(('ontouchstart' in win) || win.DocumentTouch && _doc instanceof DocumentTouch) // Modernizr.touch
         },
 
         // Methods
@@ -222,7 +225,7 @@
 
             this.features.width            = w;
             this.features.height           = h;
-            this.features['aspect-ratio']  = (h >= w ? h / w : w / h).toFixed(2);
+            this.features['aspect-ratio']  = (h / w).toFixed(2);
             this.features.orientation      = (h >= w ? 'portrait' : 'landscape');
         },
 
@@ -237,15 +240,12 @@
         },
 
         init: function() {
-            var w           = screen.width,
-                h           = screen.height,
-                ratio       = win.devicePixelRatio;
+            var x           = win.devicePixelRatio;
 
             this.supported  = parseFloat(_mediaInfoStyle.height) === 1;
             this.type       = _typeList.split(', ')[parseFloat(_mediaInfoStyle.zIndex) - 1] || 'all'; 
 
-            this.features["device-aspect-ratio"] = (h >= w ? h / w : w / h).toFixed(2);
-            this.features.resolution = (ratio && ratio * 96) || screen.deviceXDPI || parseFloat(_mediaInfoStyle.width);
+            this.features.resolution = (x && x * 96) || screen.deviceXDPI || parseFloat(_mediaInfoStyle.width);
 
             this.setMutableFeatures();
             this.listen(this.watch);
