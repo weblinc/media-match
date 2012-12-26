@@ -69,7 +69,7 @@
             "aspect-ratio"          : 0, // Update on resize
             "color"                 : _color,
             "color-index"           : Math.pow(2, _color),
-            "device-aspect-ratio"   : (_deviceHeight / _deviceWidth).toFixed(2),
+            "device-aspect-ratio"   : (_deviceWidth / _deviceHeight).toFixed(2),
             "device-width"          : _deviceWidth,
             "device-height"         : _deviceHeight,
             "orientation"           : "landscape", // Update on resize/orientation change
@@ -223,7 +223,7 @@
 
             this.features.width            = w;
             this.features.height           = h;
-            this.features['aspect-ratio']  = (h / w).toFixed(2);
+            this.features['aspect-ratio']  = (w / h).toFixed(2);
             this.features.orientation      = (h >= w ? 'portrait' : 'landscape');
         },
 
