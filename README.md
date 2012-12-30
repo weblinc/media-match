@@ -54,3 +54,7 @@ Example
         });
 </script>
 ```
+##Related projects
+* [Nonresponsive](https://github.com/weblinc/nonresponsive)
+* [Picture](https://github.com/weblinc/picture)
+* [Img-srcset](https://github.com/weblinc/img-srcset)
