@@ -100,7 +100,7 @@
 
             // Convert aspect ratio to decimals
             if ((match = data.match(/(\d+)[\/:](\d+)/))) {
-                return match[1] / match[2];
+                return (match[1] / match[2]).toFixed(2);
             }
 
             // Convert resolution unit to pixels
