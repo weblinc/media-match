@@ -29,6 +29,21 @@ Media type and feature support
 * **scan**: `scan`
 * **grid**: `grid`
 
+Requirements
+---
+####media.min.js/media.js
+Provides core functionality. Does not contain external javascript library dependencies.
+####media.css
+Contains rules used to determine media query support and get media type. Copy the contents of media.css to include with in your base style sheet or link to media.css.
+* **z-index** : Used to access Media _typeList array as index. ["screen", "print", "speech", ...]
+* **width**   : Used to retrieve dpi for non-IE broswers. IE supports screen.DPIX.
+* **height**  : Used to test media query support. IE <9 handle media type but not query expression.
+
+Optional
+---
+####media.extension.js
+Provides method of extending Media.features support. For example, Media supports device-pixel-ratio using the more standard resolution dppx but some projects may have implementations already using device-pixel-ratio. media.extension.js provides the space for this kind of feature support.  
+
 Example
 ---
 ```
