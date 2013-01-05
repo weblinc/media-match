@@ -1,7 +1,7 @@
 Media.match
 ===========
 
-Testing css media queries in javascript faster than native window.matchMedia, perhaps. [@mediamatchjs](https://twitter.com/mediamatchjs)
+Test css media queries in javascript. A faster polyfill for matchMedia support. Follow the project on Twitter [@mediamatchjs](https://twitter.com/mediamatchjs).
 
 Why?
 ---
