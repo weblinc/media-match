@@ -1,7 +1,7 @@
 /* Media - Testing css media queries in Javascript. Authors & copyright (c) 2012: WebLinc, David Knight, Zac Owen. */
 
 // Media
-window.matchMedia || (window.matchMedia = (function(win) {
+(function(win) {
     'use strict';
 
     // Internal globals
@@ -252,5 +252,5 @@ window.matchMedia || (window.matchMedia = (function(win) {
 
     win.Media.init();
 
-    return Media.match;
-})(window));
+    window.matchMedia || (window.matchMedia = Media.match);
+})(window);
