@@ -70,6 +70,6 @@ Example
 </script>
 ```
 ##Related projects
-* [Nonresponsive](https://github.com/weblinc/nonresponsive)
-* [Picture](https://github.com/weblinc/picture)
-* [Img-srcset](https://github.com/weblinc/img-srcset)
+* [Nonresponsive](https://github.com/weblinc/nonresponsive): Media queries for the unsupportive IE6-8.
+* [Picture](https://github.com/weblinc/picture): Responsive images based on the 'picture' element proposal.
+* [Img-srcset](https://github.com/weblinc/img-srcset): Responsive images based on the 'srcset' attribute proposal.
