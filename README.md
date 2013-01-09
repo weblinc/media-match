@@ -46,6 +46,35 @@ Provides method of extending Media.features support. For example, Media supports
 
 Example
 ---
+
+Both code blocks are valid uses of this library. Each example shows the caching of a ```MediaQueryList``` object and ```addListener``` support.
+The ```addListener``` method is part of the ```MediaQueryList``` object, therefore it can be add on the cached version or immediately after ```matchMedia()``` or ```match()```.
+
+#####Standard matchMedia polyfill implementation
+```
+<script type="text/javascript">
+    var mql = window.matchMedia('screen and (color) and (orientation: landscape) and (min-width: 600px) and (min-height: 400px)');
+    //console.log(mql);
+    /*
+        mql has the following properties:
+        matches         : <Boolean>
+        media           : <String>
+        addListener     : <Function>
+        removeListener  : <Function>
+    */
+    
+    window.matchMedia('screen and (min-width: 600px) and (min-height: 400px), screen and (min-height: 400px)')
+        .addListener(function(mql) {
+            if (mql.matches) {
+                // Media query does match
+            } else {
+                // Media query does not match anymore
+            }
+        });
+</script>
+```
+
+#####Media-match implementation
 ```
 <script type="text/javascript">
     var mql = Media.match('screen and (color) and (orientation: landscape) and (min-width: 600px) and (min-height: 400px)');
