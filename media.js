@@ -14,7 +14,7 @@
         _viewport       = _doc.documentElement,
         _typeList       = 'screen, print, speech, projection, handheld, tv, braille, embossed, tty',
         _mediaExpr      = /\(\s*(not)?\s*(min|max)?-?([^:\s]+)\s*:\s*([^\s]+)\s*\)/,
-        _typeExpr       = /(not)?\s*(\w*)/,
+        _typeExpr       = /(only)?(not)?\s*(\w*)/,
         _mqlID          = 0,
         _timer          = 0;
 
@@ -155,8 +155,8 @@
                             exprMatch = feature;
                         }
                     } else {
-                        type        = exprList[exprl].match(_typeExpr) || ['', 'all'];
-                        mt          = type[2];
+                        type        = exprList[exprl].match(_typeExpr);
+                        mt          = type[3] || 'all';
                         typeMatch   = mt === this.type || mt === 'all';
 
                         matched && negate && mt !== 'all' && (mt = _typeList.split(mt).join(', ').replace(/(,\s){2}/, ''));
