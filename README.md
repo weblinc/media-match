@@ -21,6 +21,7 @@ Media type and feature support
 * **device-aspect-ratio**:  `device-aspect-ratio`, `min-device-aspect-ratio`, `max-device-aspect-ratio`
 * **orientation**:          `orientation`
 * **resolution**:           `resolution`, `min-resolution`, `max-resolution`
+* **device-pixel-ratio**:   `device-pixel-ratio`, `min-device-pixel-ratio`, `max-device-pixel-ratio`
 * **color**:                `color`, `min-color`, `max-color`
 * **color-index**:          `color-index`, `min-color-index`, `max-color-index`
 
