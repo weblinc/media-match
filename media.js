@@ -13,7 +13,7 @@
         _color          = screen.colorDepth,
         _viewport       = _doc.documentElement,
         _typeList       = 'screen, print, speech, projection, handheld, tv, braille, embossed, tty',
-        _mediaExpr      = /\(\s*(not)?\s*(min|max)?-?([^:\s]+)\s*:\s*([^\s]+)\s*\)/,
+        _mediaExpr      = /\(\s*(-[a-z]+-)?(min|max)?-?([^:\s]+)\s*:\s*([^\s]+)\s*\)/,
         _typeExpr       = /(only)?(not)?\s*(\w*)/,
         _mqlID          = 0,
         _timer          = 0;
@@ -73,7 +73,8 @@
             "device-width"          : _deviceWidth,
             "device-height"         : _deviceHeight,
             "orientation"           : "landscape", // Update on resize/orientation change
-            "resolution"            : 96
+            "resolution"            : 96,
+            "device-pixel-ratio"    : 1
         },
 
         // Methods
@@ -116,7 +117,7 @@
                 return match[1] * 1;
             }
 
-            return data;
+            return data * 1;
         },
 
         /*
@@ -238,12 +239,13 @@
         },
 
         init: function() {
-            var x           = win.devicePixelRatio;
+            var x           = win.devicePixelRatio || 1;
 
             this.supported  = parseFloat(_mediaInfoStyle.height) === 1;
             this.type       = _typeList.split(', ')[parseFloat(_mediaInfoStyle.zIndex) - 1] || 'all'; 
 
-            this.features.resolution = (x && x * 96) || screen.deviceXDPI || parseFloat(_mediaInfoStyle.width);
+            this.features.resolution            = (x && x * 96) || screen.deviceXDPI || parseFloat(_mediaInfoStyle.width);
+            this.features['device-pixel-ratio'] = x;
 
             this.setMutableFeatures();
             this.listen(this.watch);
