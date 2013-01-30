@@ -165,7 +165,7 @@ window.matchMedia || (window.matchMedia = function (win) {
         /*
             _setFeature
          */
-        _setFeature = function (evt) {
+        _setFeature = function () {
             // Sets properties of '_features' that change on resize and/or orientation.
             var w   = win.innerWidth || _viewport.clientWidth,
                 h   = win.innerHeight || _viewport.clientHeight,
@@ -190,7 +190,7 @@ window.matchMedia || (window.matchMedia = function (win) {
         /*
             _watch
          */
-        _watch = function (evt) {
+        _watch = function () {
             clearTimeout(_timer);
 
             _timer = setTimeout(function () {
@@ -251,7 +251,7 @@ window.matchMedia || (window.matchMedia = function (win) {
 
             // Create media blocks to test for media type
             for ( ; typeIndex < typeLength; typeIndex++) {
-                cssText += '@media ' + typeList[typeIndex] + ' { #mediamatchjs { z-index: ' + i + ' } }';
+                cssText += '@media ' + typeList[typeIndex] + ' { #mediamatchjs { z-index: ' + typeIndex + ' } }';
             }
 
             // Add rules to style element
@@ -320,4 +320,4 @@ window.matchMedia || (window.matchMedia = function (win) {
 
         return mql;
     };
-})(window);
+}(window));
