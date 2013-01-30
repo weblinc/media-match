@@ -8,7 +8,7 @@ Why?
 * **Browser support**: Tested in IE 6-9, Chrome, Firefox, Opera, Safari, iOS and Android
 * **Feature support**: Has all the basics + most of the spec http://www.w3.org/TR/css3-mediaqueries/
 * **Speed**: In many browsers, ops/sec rival or exceed native matchMedia. See 'test' to run your own speed tests using JSLitmus or check out http://jsperf.com/matchmedia/11 and http://jsfiddle.net/wV9HZ/2/
-* **Size**: 3kb minified
+* **Size**: 2.73KB minified (1.46KB gzipped)
 
 Media type and feature support
 ---
@@ -32,26 +32,16 @@ Media type and feature support
 
 Requirements
 ---
-####media.min.js/media.js
-Provides core functionality. Does not contain external javascript library dependencies.
-####media.css
-Contains rules used to determine media query support and get media type. Copy the contents of media.css to include with in your base style sheet or link to media.css.
-* **z-index** : Used to access Media _typeList array as index. ["screen", "print", "speech", ...]
-* **width**   : Used to retrieve dpi for non-IE broswers. IE supports screen.DPIX.
-* **height**  : Used to test media query support. IE <9 handle media type but not query expression.
-
-Optional
----
-####media.extension.js
-Provides method of extending Media.features support. For example, Media supports device-pixel-ratio using the more standard resolution dppx but some projects may have implementations already using device-pixel-ratio. media.extension.js provides the space for this kind of feature support.  
+####media.match.min.js/media.match.js
+* Provides core functionality. Does not contain external javascript library or css dependencies.
+* Version 1 of this project contained a css dependency that is now solely handled by media.match.js. See branch, "version1" for previous interation.
 
 Example
 ---
 
-Both code blocks are valid uses of this library. Each example shows the caching of a ```MediaQueryList``` object and ```addListener``` support.
-The ```addListener``` method is part of the ```MediaQueryList``` object, therefore it can be add on the cached version or immediately after ```matchMedia()``` or ```match()```.
+Both code blocks are valid uses of ```matchMedia()```. The first example shows the caching of a ```MediaQueryList``` object and the second shows an alternative usage as well as ```addListener``` support.
+The ```addListener``` method is part of the ```MediaQueryList``` object, therefore it can be added on the cached version or immediately after ```matchMedia()```.
 
-#####Standard matchMedia polyfill implementation
 ```
 <script type="text/javascript">
     var mql = window.matchMedia('screen and (color) and (orientation: landscape) and (min-width: 600px) and (min-height: 400px)');
@@ -63,7 +53,10 @@ The ```addListener``` method is part of the ```MediaQueryList``` object, therefo
         addListener     : <Function>
         removeListener  : <Function>
     */
-    
+</script>
+```
+```
+<script type="text/javascript">
     window.matchMedia('screen and (min-width: 600px) and (min-height: 400px), screen and (min-height: 400px)')
         .addListener(function(mql) {
             if (mql.matches) {
@@ -75,30 +68,6 @@ The ```addListener``` method is part of the ```MediaQueryList``` object, therefo
 </script>
 ```
 
-#####Media-match implementation
-```
-<script type="text/javascript">
-    var mql = Media.match('screen and (color) and (orientation: landscape) and (min-width: 600px) and (min-height: 400px)');
-    //console.log(mql);
-    /*
-        mql has the following properties:
-        matches         : <Boolean>
-        media           : <String>
-        addListener     : <Function>
-        removeListener  : <Function>
-    */
-    
-    Media
-        .match('screen and (min-width: 600px) and (min-height: 400px), screen and (min-height: 400px)')
-        .addListener(function(mql) {
-            if (mql.matches) {
-                // Media query does match
-            } else {
-                // Media query does not match anymore
-            }
-        });
-</script>
-```
 ##Related projects
 * [Nonresponsive](https://github.com/weblinc/nonresponsive): Media queries for the unsupportive IE6-8.
 * [Picture](https://github.com/weblinc/picture): Responsive images based on the 'picture' element proposal.
