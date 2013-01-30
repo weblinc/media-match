@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <script type="text/javascript" src="media.match.min.js"></script>
+    </head>
+    <body>
+        <script type="text/javascript">
+            var mql = window.matchMedia('screen and (color) and (orientation: landscape) and (min-width: 600px) and (min-height: 400px)');
+            //console.log(mql);
+            /*
+                mql has the following properties:
+                matches         : <Boolean>
+                media           : <String>
+                addListener     : <Function>
+                removeListener  : <Function>
+            */
+
+            window.matchMedia('screen and (min-width: 600px) and (min-height: 400px), screen and (min-height: 400px)')
+                .addListener(function(mql) {
+                    if (mql.matches) {
+                        // Media query does match
+                    } else {
+                        // Media query does not match anymore
+                    }
+                });
+        </script>
+    </body>
+</html>
