@@ -34,7 +34,7 @@ Requirements
 ---
 ####media.match.min.js/media.match.js
 * Provides core functionality. Does not contain external javascript library or css dependencies.
-* Version 1 of this project contained a css dependency that is now solely handled by media.match.js. See branch, "version1" for previous interation.
+* Version 1 of this project contained a css dependency that is now solely handled by media.match.js. See branch, "version1" for previous iteration.
 
 Example
 ---
