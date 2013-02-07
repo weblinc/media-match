@@ -1,4 +1,4 @@
-/* MediaMatch v.2 - Testing css media queries in Javascript. Authors & copyright (c) 2013: WebLinc, David Knight. */
+/* MediaMatch v.2.0.1 - Testing css media queries in Javascript. Authors & copyright (c) 2013: WebLinc, David Knight. */
 
 window.matchMedia || (window.matchMedia = function (win) {
     'use strict';
@@ -21,7 +21,8 @@ window.matchMedia || (window.matchMedia = function (win) {
                     // (min-width: 300px)
                     // (width: 300px)
                     // (width)
-        _mediaExpr  = /^\s*\(\s*(-[a-z]+-)?(min-|max-)?([a-z\-]+)\s*(:?\s*([0-9]+)(px|em|dppx|dpcm|rem|%|in|cm|mm|ex|pt|pc|\/([0-9]+)))?\s*\)\s*$/,
+                    // (orientation: portrait|landscape)
+        _mediaExpr  = /^\s*\(\s*(-[a-z]+-)?(min-|max-)?([a-z\-]+)\s*(:?\s*([0-9]+(\.[0-9]+)?|portrait|landscape)(px|em|dppx|dpcm|rem|%|in|cm|mm|ex|pt|pc|\/([0-9]+(\.[0-9]+)?))?)?\s*\)\s*$/,
         _timer      = 0,
 
         // Helper methods
@@ -105,7 +106,8 @@ window.matchMedia || (window.matchMedia = function (win) {
 
                         prefix  = expr[2];
                         length  = expr[5];
-                        unit    = expr[6];
+                        value   = length;
+                        unit    = expr[7];
                         feature = _features[expr[3]];
 
                         // Convert unit types
@@ -117,9 +119,9 @@ window.matchMedia || (window.matchMedia = function (win) {
                                 // Convert relative length unit to pixels
                                 // Assumed base font size is 16px
                                 value = 16 * length;
-                            } else if (expr[7]) {
+                            } else if (expr[8]) {
                                 // Convert aspect ratio to decimal
-                                value = (length / expr[7]).toFixed(2);
+                                value = (length / expr[8]).toFixed(2);
                             } else if (unit === 'dppx') {
                                 // Convert resolution dppx unit to pixels
                                 value = length * 96;
@@ -141,7 +143,7 @@ window.matchMedia || (window.matchMedia = function (win) {
                         } else if (value) {
                             match = feature === value;
                         } else {
-                            match = feature > 0;
+                            match = !!feature;
                         }
 
                         // If 'match' is false, break loop
