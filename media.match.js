@@ -1,4 +1,4 @@
-/* MediaMatch v.2.0.1 - Testing css media queries in Javascript. Authors & copyright (c) 2013: WebLinc, David Knight. */
+/* MediaMatch v.2.0.2 - Testing css media queries in Javascript. Authors & copyright (c) 2013: WebLinc, David Knight. */
 
 window.matchMedia || (window.matchMedia = function (win) {
     'use strict';
@@ -253,7 +253,7 @@ window.matchMedia || (window.matchMedia = function (win) {
 
             // Create media blocks to test for media type
             for ( ; typeIndex < typeLength; typeIndex++) {
-                cssText += '@media ' + typeList[typeIndex] + ' { #mediamatchjs { z-index: ' + typeIndex + ' } }';
+                cssText += '@media ' + typeList[typeIndex] + ' { #mediamatchjs { position: relative; z-index: ' + typeIndex + ' } }';
             }
 
             // Add rules to style element
