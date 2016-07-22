@@ -1,5 +1,15 @@
 {
   "name": "media-match",
-  "version": "0.1.0",
-  "main": ["media.match.js"]
+  "main" :"media.match.js",
+  "homepage": "https://github.com/weblinc/media-match",
+  "version": "2.0.2",
+  "_release": "2.0.2",
+  "_resolution": {
+    "type": "version",
+    "tag": "v2.0.2",
+    "commit": "8edbaa89dff477ed13107f84b4e74700c17b9382"
+  },
+  "_source": "git://github.com/weblinc/media-match.git",
+  "_target": "~2.0.2",
+  "_originalSource": "media-match"
 }
