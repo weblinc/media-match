@@ -271,8 +271,8 @@ window.matchMedia || (window.matchMedia = function (win) {
             _setFeature();
 
             // Set up listeners
-            addEvent(eventPrefix + 'resize', _watch);
-            addEvent(eventPrefix + 'orientationchange', _watch);
+            addEvent(eventPrefix + 'resize', _watch, false);
+            addEvent(eventPrefix + 'orientationchange', _watch, false);
         };
 
     _init();
