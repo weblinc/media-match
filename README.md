@@ -25,14 +25,14 @@ Media type and feature support
 * **color**:                `color`, `min-color`, `max-color`
 * **color-index**:          `color-index`, `min-color-index`, `max-color-index`
 
-###Lacks support
+### Lacks support
 * **monochrome**:           `monochrome`, `min-monochrome`, `max-monochrome`
 * **scan**: `scan`
 * **grid**: `grid`
 
 Requirements
 ---
-####media.match.min.js/media.match.js
+#### media.match.min.js/media.match.js
 * Provides core functionality. Does not contain external javascript library or css dependencies.
 * Version 1 of this project contained a css dependency that is now solely handled by media.match.js. See branch, "version1" for previous iteration.
 
@@ -68,7 +68,7 @@ The ```addListener``` method is part of the ```MediaQueryList``` object, therefo
 </script>
 ```
 
-##Related projects
+## Related projects
 * [Nonresponsive](https://github.com/weblinc/nonresponsive): Media queries for the unsupportive IE6-8.
 * [Picture](https://github.com/weblinc/picture): Responsive images based on the 'picture' element proposal.
 * [Img-srcset](https://github.com/weblinc/img-srcset): Responsive images based on the 'srcset' attribute proposal.
