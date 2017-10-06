@@ -1,0 +1,9 @@
+{
+  "name": "media-match",
+  "version": "2.0.3",
+  "description": "Test css media queries in javascript. A faster polyfill for matchMedia support.",
+  "main": "media.match.js",
+  "repository": "git@github.com:weblinc/media-match.git",
+  "author": "David Knight <dknight@weblinc.com>",
+  "license": "MIT"
+}
